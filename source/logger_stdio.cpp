@@ -31,12 +31,18 @@
 #include "logxx/logger_stdio.h"
 
 void logxx::logger_stdio::handle(log_message const& message) {
-    std::fprintf(_file, "%.*s(%i):%.*s [%s] %.*s\n",
+    std::fprintf(_file,
+#if LOGXX_SOURCE_LOCATION
+        "%.*s(%i):%.*s "
+#endif
+        "[%s] %.*s\n",
+#if LOGXX_SOURCE_LOCATION
         static_cast<int>(message.location_file.size()),
         message.location_file.data(),
         message.location_line,
         static_cast<int>(message.location_symbol.size()),
         message.location_symbol.data(),
+#endif
         level_string(message.level),
         static_cast<int>(message.message.size()),
         message.message.data()

@@ -33,12 +33,16 @@
 void logxx::logger_ostream::handle(log_message const& message) {
     std::unique_lock<std::mutex> _(_lock);
 
+#if LOGXX_SOURCE_LOCATION
     _stream.write(message.location_file.data(), message.location_file.size());
     _stream << '(' << message.location_line << "):";
     _stream.write(message.location_symbol.data(), message.location_symbol.size());
-    _stream << " [" << level_string(message.level) << "] ";
+    _stream << ' ';
+#endif
+    _stream << '[' << level_string(message.level) << "] ";
     _stream.write(message.message.data(), message.message.size());
     _stream << '\n';
+
     if (_flush) {
         _stream << std::flush;
     }

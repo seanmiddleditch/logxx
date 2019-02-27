@@ -8,6 +8,7 @@ project(logxx
 
 option(LOGXX_BUILD_TESTS "Build logxx tests" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+option(LOGXX_RELEASE_SOURCE_LOCATION "Always output source locations" OFF)
 
 add_library(logxx)
 target_compile_features(logxx PUBLIC cxx_std_11)
@@ -16,6 +17,12 @@ set_target_properties(logxx PROPERTIES
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN ON
 )
+
+if(LOGXX_RELEASE_SOURCE_LOCATION)
+    target_compile_definitions(logxx PUBLIC
+        LOGXX_SOURCE_LOCATION=1
+    )
+endif()
 
 target_sources(logxx PRIVATE
 	include/logxx/logxx.h

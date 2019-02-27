@@ -57,6 +57,14 @@
 #	endif
 #endif
 
+#if !defined(LOGXX_SOURCE_LOCATION)
+#   if defined(NDEBUG)
+#      define LOGXX_SOURCE_LOCATION 0
+#   else
+#      define LOGXX_SOURCE_LOCATION 1
+#   endif
+#endif
+
 namespace logxx {
     enum class log_level {
         fatal,
@@ -104,9 +112,11 @@ namespace logxx {
     struct log_message final {
         log_level level = log_level::info;
         string_view message;
+#if LOGXX_SOURCE_LOCATION
         string_view location_file;
         string_view location_symbol;
         int location_line;
+#endif
     };
 
     class logger_base {
@@ -155,10 +165,14 @@ namespace logxx {
 
 } // namespace logxx
 
-#define LOXX_LOG(level, message) (::logxx::dispatch_message({(level), (message), __FILE__, __FUNCTION__, __LINE__}))
+#if LOGXX_SOURCE_LOCATION
+#   define LOXX_LOG(level, message) (::logxx::dispatch_message({(level), (message), __FILE__, __FUNCTION__, __LINE__}))
+#else
+#   define LOXX_LOG(level, message) (::logxx::dispatch_message({(level), (message)}))
+#endif
 
-#define LOXX_LOG_ERROR(message) (::logxx::dispatch_message({::logxx::log_level::error, (message), __FILE__, __FUNCTION__, __LINE__}))
-#define LOXX_LOG_INFO(message) (::logxx::dispatch_message({::logxx::log_level::info, (message), __FILE__, __FUNCTION__, __LINE__}))
-#define LOXX_LOG_DEBUG(message) (::logxx::dispatch_message({::logxx::log_level::debug, (message), __FILE__, __FUNCTION__, __LINE__}))
+#define LOXX_LOG_ERROR(message) LOXX_LOG(::logxx::log_level::error, (message))
+#define LOXX_LOG_INFO(message) LOXX_LOG(::logxx::log_level::info, (message))
+#define LOXX_LOG_DEBUG(message) LOXX_LOG(::logxx::log_level::debug, (message))
 
 #endif // !defined(_guard_LOGXX_H)

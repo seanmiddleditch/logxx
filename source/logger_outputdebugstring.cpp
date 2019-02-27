@@ -34,12 +34,18 @@
 
 void logxx::logger_outputdebugstring::handle(log_message const& message) {
     char buffer[4096];
-    _snprintf_s(buffer, sizeof(buffer) - 1, "%.*s(%i):%.*s [%s] %.*s\n",
+    _snprintf_s(buffer, sizeof(buffer) - 1,
+#if LOGXX_SOURCE_LOCATION
+        "%.*s(%i):%.*s "
+#endif
+        "[%s] %.*s\n",
+#if LOGXX_SOURCE_LOCATION
         static_cast<int>(message.location_file.size()),
         message.location_file.data(),
         message.location_line,
         static_cast<int>(message.location_symbol.size()),
         message.location_symbol.data(),
+#endif
         level_string(message.level),
         static_cast<int>(message.message.size()),
         message.message.data()
