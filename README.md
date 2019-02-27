@@ -57,12 +57,15 @@ other libraries. Time will tell.
 
 ## To Do
 
-- Windows OutputDebugStringA
-- Optimization, esp. around logging
+- Optimization, esp. around locking
 - Multi-logger implementation
 - More built-in loggers
+  - Rotating file logger
+  - Network logger?
+  - *nix syslog logger
 - Formatted logging via formatxx
   - Maybe also ostream and fmtlib (or stdlib) formatting
+- Real tests
 
 ## Copying
 
