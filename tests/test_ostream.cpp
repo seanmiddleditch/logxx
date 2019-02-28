@@ -1,9 +1,13 @@
 #include "logxx/logger_ostream.h"
-#include <iostream>
+#include <sstream>
+#include <doctest/doctest.h>
 
-void test_ostream() {
-    logxx::logger_ostream cout(std::cout);
-    logxx::scoped_logger scoped(cout);
+DOCTEST_TEST_CASE("logger_ostream") {
+    std::ostringstream str;
+    logxx::logger_ostream stream(str);
+    logxx::scoped_logger scoped(stream);
 
     LOXX_LOG_INFO("testing ostream");
+
+    DOCTEST_CHECK(str.str().find("testing ostream") != std::string::npos);
 }

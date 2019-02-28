@@ -55,6 +55,8 @@ install(EXPORT logxx-targets DESTINATION share/logxx/cmake)
 export(TARGETS logxx FILE logxx-exports.cmake)
 
 if(LOGXX_BUILD_TESTS)
+    add_subdirectory(external)
+
 	enable_testing()
 	add_executable(logxx_tests)
     target_sources(logxx_tests PRIVATE
@@ -64,6 +66,6 @@ if(LOGXX_BUILD_TESTS)
         tests/test_splitter.cpp
         tests/test_stdio.cpp
     )
-	target_link_libraries(logxx_tests logxx)
+	target_link_libraries(logxx_tests logxx doctest)
 	add_test(logxx_tests logxx_tests)
 endif()
