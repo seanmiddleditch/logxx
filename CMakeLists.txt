@@ -28,12 +28,14 @@ target_sources(logxx PRIVATE
 	include/logxx/logxx.h
     include/logxx/logger_ostream.h
     include/logxx/logger_outputdebugstring.h
+    include/logxx/logger_splitter.h
     include/logxx/logger_stdio.h
 )
 target_sources(logxx PRIVATE
 	source/logxx.cpp
     source/logger_ostream.cpp
     $<$<PLATFORM_ID:Windows>:source/logger_outputdebugstring.cpp>
+    source/logger_splitter.cpp
     source/logger_stdio.cpp
 )
 
@@ -59,6 +61,7 @@ if(LOGXX_BUILD_TESTS)
         tests/main.cpp
         tests/test_ostream.cpp
         $<$<PLATFORM_ID:Windows>:tests/test_outputdebugstring.cpp>
+        tests/test_splitter.cpp
         tests/test_stdio.cpp
     )
 	target_link_libraries(logxx_tests logxx)
