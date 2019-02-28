@@ -166,13 +166,13 @@ namespace logxx {
 } // namespace logxx
 
 #if LOGXX_SOURCE_LOCATION
-#   define LOXX_LOG(level, message) (::logxx::dispatch_message({(level), (message), __FILE__, __FUNCTION__, __LINE__}))
+#   define LOGXX_LOG(level, message) (::logxx::dispatch_message({(level), (message), __FILE__, __FUNCTION__, __LINE__}))
 #else
-#   define LOXX_LOG(level, message) (::logxx::dispatch_message({(level), (message)}))
+#   define LOGXX_LOG(level, message) (::logxx::dispatch_message({(level), (message)}))
 #endif
 
-#define LOXX_LOG_ERROR(message) LOXX_LOG(::logxx::log_level::error, (message))
-#define LOXX_LOG_INFO(message) LOXX_LOG(::logxx::log_level::info, (message))
-#define LOXX_LOG_DEBUG(message) LOXX_LOG(::logxx::log_level::debug, (message))
+#define LOGXX_LOG_ERROR(message) LOGXX_LOG(::logxx::log_level::error, (message))
+#define LOGXX_LOG_INFO(message) LOGXX_LOG(::logxx::log_level::info, (message))
+#define LOGXX_LOG_DEBUG(message) LOGXX_LOG(::logxx::log_level::debug, (message))
 
 #endif // !defined(_guard_LOGXX_H)

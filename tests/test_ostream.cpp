@@ -7,7 +7,7 @@ DOCTEST_TEST_CASE("logger_ostream") {
     logxx::logger_ostream stream(str);
     logxx::scoped_logger scoped(stream);
 
-    LOXX_LOG_INFO("testing ostream");
+    LOGXX_LOG_INFO("testing ostream");
 
     DOCTEST_CHECK(str.str().find("testing ostream") != std::string::npos);
 }

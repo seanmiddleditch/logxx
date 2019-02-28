@@ -12,7 +12,7 @@ DOCTEST_TEST_CASE("logger_stdio") {
     // but a line-end character.
     setvbuf(stdout, buffer, _IOFBF, sizeof(buffer));
 
-    LOXX_LOG_INFO("testing stdio");
+    LOGXX_LOG_INFO("testing stdio");
 
     setvbuf(stdout, nullptr, _IOLBF, BUFSIZ);
 

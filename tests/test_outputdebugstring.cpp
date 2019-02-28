@@ -5,5 +5,5 @@ void test_outputdebugstring() {
     logxx::logger_outputdebugstring ods;
     logxx::scoped_logger scoped(ods);
 
-    LOXX_LOG_INFO("testing OutputDebugString");
+    LOGXX_LOG_INFO("testing OutputDebugString");
 }

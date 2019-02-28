@@ -9,7 +9,7 @@ DOCTEST_TEST_CASE("logger_splitter") {
     logxx::logger_splitter splitter(first_stream, second_stream);
     logxx::scoped_logger scoped(splitter);
 
-    LOXX_LOG_INFO("testing splitter");
+    LOGXX_LOG_INFO("testing splitter");
 
     DOCTEST_CHECK(first.str().find("testing splitter") != std::string::npos);
     DOCTEST_CHECK(second.str().find("testing splitter") != std::string::npos);
