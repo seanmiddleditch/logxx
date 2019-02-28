@@ -123,7 +123,7 @@ namespace logxx {
     public:
         virtual ~logger_base() = default;
 
-        virtual void LOGXX_API handle(log_message const& message) = 0;
+        virtual void handle(log_message const& message) = 0;
     };
 
     LOGXX_PUBLIC char const* LOGXX_API level_string(log_level level);
