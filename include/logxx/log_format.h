@@ -39,7 +39,7 @@
 namespace logxx {
     template <typename... T>
     void log_format(log_message const& message, T const& ... args) {
-        formatxx::fixed_writer<4096> buffer;
+        formatxx::fixed_writer<1024> buffer;
         formatxx::format(buffer, formatxx::string_view{ message.message.data(), message.message.size() }, args...);
         log_message formatted_message = message;
         formatted_message.message = string_view{ buffer.c_str(), buffer.size() };

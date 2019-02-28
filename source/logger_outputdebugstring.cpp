@@ -33,7 +33,7 @@
 #include <windows.h>
 
 void logxx::logger_outputdebugstring::handle(log_message const& message) {
-    char buffer[4096];
+    char buffer[1024];
     _snprintf_s(buffer, sizeof(buffer) - 1,
 #if LOGXX_SOURCE_LOCATION
         "%.*s(%i):%.*s "
