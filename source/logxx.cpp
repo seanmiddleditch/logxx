@@ -30,6 +30,7 @@
 
 #include "logxx/logxx.h"
 #include "logxx/logger_stdio.h"
+#include "reader_writer_lock.h"
 
 #include <mutex>
 #include <cstdio>
@@ -38,7 +39,9 @@
 namespace {
     logxx::logger_stdio default_logger(stdout);
 
-    std::mutex global_lock;
+    logxx::aligned_atomic_uint32_t global_lock = 0;
+    logxx::writer_lock global_writer_lock(global_lock);
+    logxx::reader_lock global_reader_lock(global_lock);
     std::vector<logxx::logger_base*> global_loggers{ &default_logger };
 
     thread_local std::vector<logxx::logger_base*> thread_loggers;
@@ -57,12 +60,12 @@ char const* LOGXX_API logxx::level_string(log_level level) {
 }
 
 logxx::scoped_logger::scoped_logger(logger_base& logger) : _logger(logger) {
-    std::unique_lock<std::mutex> _(global_lock);
+    std::unique_lock<writer_lock> _(global_writer_lock);
     global_loggers.push_back(&logger);
 }
 
 logxx::scoped_logger::~scoped_logger() {
-    std::unique_lock<std::mutex> _(global_lock);
+    std::unique_lock<writer_lock> _(global_writer_lock);
     global_loggers.pop_back();
 }
 
@@ -76,15 +79,19 @@ logxx::scoped_logger_thread_local::~scoped_logger_thread_local() {
 
 auto LOGXX_API logxx::dispatch_message(log_message const& message) -> log_result_code {
     for (logger_base* logger : thread_loggers) {
-        logger->handle(message);
+        log_operation op = logger->handle(message);
+        if (op == log_operation::op_break) {
+            return log_result_code::success;
+        }
     }
 
-    // FIXME: we don't want to hold the lock during the log operation itself...
-    //  probably want a ref-counted global logger, which means something like shared_ptr :(
-    //  or we want a reader-writer local on global_logger for set_global_logger (as writer)
-    std::unique_lock<std::mutex> _(global_lock);
+    std::unique_lock<reader_lock> _(global_reader_lock);
+
     for (logger_base* logger : global_loggers) {
-        logger->handle(message);
+        log_operation op = logger->handle(message);
+        if (op == log_operation::op_break) {
+            return log_result_code::success;
+        }
     }
 
     return log_result_code::success;

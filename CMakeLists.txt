@@ -41,6 +41,7 @@ target_sources(logxx PRIVATE
     source/logger_ostream.cpp
     $<$<PLATFORM_ID:Windows>:source/logger_outputdebugstring.cpp>
     source/logger_stdio.cpp
+    source/reader_writer_lock.h
 )
 
 target_include_directories(logxx PUBLIC
