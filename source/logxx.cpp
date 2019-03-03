@@ -33,14 +33,15 @@
 
 #include <mutex>
 #include <cstdio>
+#include <vector>
 
 namespace {
     logxx::logger_stdio default_logger(stdout);
 
     std::mutex global_lock;
-    logxx::logger_base* global_logger = &default_logger;
+    std::vector<logxx::logger_base*> global_loggers{ &default_logger };
 
-    thread_local logxx::logger_base* thread_logger = nullptr;
+    thread_local std::vector<logxx::logger_base*> thread_loggers;
 }
 
 char const* LOGXX_API logxx::level_string(log_level level) {
@@ -55,33 +56,36 @@ char const* LOGXX_API logxx::level_string(log_level level) {
     }
 }
 
-auto LOGXX_API logxx::set_global_logger(logger_base* logger, logger_base** old_logger) -> log_result {
+logxx::scoped_logger::scoped_logger(logger_base& logger) : _logger(logger) {
     std::unique_lock<std::mutex> _(global_lock);
-    if (old_logger != nullptr) {
-        *old_logger = global_logger;
-    }
-    global_logger = logger;
-    return log_result::success;
+    global_loggers.push_back(&logger);
 }
 
-auto LOGXX_API logxx::set_thread_local_logger(logger_base* logger, logger_base** old_logger) -> log_result {
-    if (old_logger != nullptr) {
-        *old_logger = thread_logger;
-    }
-    global_logger = thread_logger;
-    return log_result::success;
+logxx::scoped_logger::~scoped_logger() {
+    std::unique_lock<std::mutex> _(global_lock);
+    global_loggers.pop_back();
 }
 
-auto LOGXX_API logxx::dispatch_message(log_message const& message) -> log_result {
-    if (thread_logger != nullptr) {
-        thread_logger->handle(message);
+logxx::scoped_logger_thread_local::scoped_logger_thread_local(logger_base& logger) : _logger(logger) {
+    thread_loggers.push_back(&logger);
+}
+
+logxx::scoped_logger_thread_local::~scoped_logger_thread_local() {
+    thread_loggers.pop_back();
+}
+
+auto LOGXX_API logxx::dispatch_message(log_message const& message) -> log_result_code {
+    for (logger_base* logger : thread_loggers) {
+        logger->handle(message);
     }
 
     // FIXME: we don't want to hold the lock during the log operation itself...
     //  probably want a ref-counted global logger, which means something like shared_ptr :(
     //  or we want a reader-writer local on global_logger for set_global_logger (as writer)
     std::unique_lock<std::mutex> _(global_lock);
-    global_logger->handle(message);
+    for (logger_base* logger : global_loggers) {
+        logger->handle(message);
+    }
 
-    return log_result::success;
+    return log_result_code::success;
 }

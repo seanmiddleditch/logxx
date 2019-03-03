@@ -32,7 +32,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-void logxx::logger_outputdebugstring::handle(log_message const& message) {
+auto logxx::logger_outputdebugstring::handle(log_message const& message) -> log_operation {
     char buffer[1024];
     _snprintf_s(buffer, sizeof(buffer) - 1,
 #if LOGXX_SOURCE_LOCATION
@@ -52,4 +52,6 @@ void logxx::logger_outputdebugstring::handle(log_message const& message) {
     );
     buffer[sizeof(buffer) - 1] = 0;
     OutputDebugStringA(buffer);
+
+    return log_operation::proceed;
 }

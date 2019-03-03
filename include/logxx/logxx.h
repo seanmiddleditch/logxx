@@ -77,12 +77,17 @@ namespace logxx {
         _max_
     };
 
-    enum class log_result {
+    enum class log_result_code {
         success = 0,
         no_loggers,
         invalid_argument,
         duplicate_logger,
         unknown
+    };
+
+    enum class log_operation {
+        proceed,
+        stop
     };
 
     class string_view final {
@@ -121,46 +126,32 @@ namespace logxx {
 
     class logger_base {
     public:
-        virtual ~logger_base() = default;
+        virtual log_operation handle(log_message const& message) = 0;
 
-        virtual void handle(log_message const& message) = 0;
+    protected:
+        ~logger_base() = default;
     };
 
     LOGXX_PUBLIC char const* LOGXX_API level_string(log_level level);
 
-    LOGXX_PUBLIC log_result LOGXX_API set_global_logger(logger_base* logger, logger_base** old_logger = nullptr);
-    LOGXX_PUBLIC log_result LOGXX_API set_thread_local_logger(logger_base* logger, logger_base** old_logger = nullptr);
-
-    LOGXX_PUBLIC log_result LOGXX_API dispatch_message(log_message const& message);
+    LOGXX_PUBLIC log_result_code LOGXX_API dispatch_message(log_message const& message);
 
     class scoped_logger {
     public:
-        scoped_logger(logger_base& logger) : _logger(logger) {
-            set_global_logger(&_logger, &_old);
-        }
-
-        ~scoped_logger() {
-            set_global_logger(_old);
-        }
+        LOGXX_PUBLIC scoped_logger(logger_base& logger);
+        LOGXX_PUBLIC ~scoped_logger();
 
     private:
         logger_base& _logger;
-        logger_base* _old = nullptr;
     };
 
     class scoped_logger_thread_local {
     public:
-        scoped_logger_thread_local(logger_base& logger) : _logger(logger) {
-            set_thread_local_logger(&_logger, &_old);
-        }
-
-        ~scoped_logger_thread_local() {
-            set_thread_local_logger(_old);
-        }
+        LOGXX_PUBLIC scoped_logger_thread_local(logger_base& logger);
+        LOGXX_PUBLIC ~scoped_logger_thread_local();
 
     private:
         logger_base& _logger;
-        logger_base* _old = nullptr;
     };
 
 } // namespace logxx
