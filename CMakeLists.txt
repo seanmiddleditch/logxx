@@ -30,6 +30,7 @@ endif()
 target_sources(logxx PRIVATE
 	include/logxx/logxx.h
     include/logxx/log_format.h
+    include/logxx/logger_null.h
     include/logxx/logger_ostream.h
     include/logxx/logger_outputdebugstring.h
     include/logxx/logger_splitter.h
