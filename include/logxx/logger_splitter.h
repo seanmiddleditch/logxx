@@ -39,7 +39,10 @@ namespace logxx {
     public:
         constexpr logger_splitter(logger_base& first, logger_base& second) noexcept : _first(first), _second(second) {}
 
-        LOGXX_PUBLIC void handle(log_message const& message) override;
+        void handle(log_message const& message) override {
+            _first.handle(message);
+            _second.handle(message);
+        }
 
     private:
         logger_base& _first;

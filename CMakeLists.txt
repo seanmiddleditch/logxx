@@ -40,7 +40,6 @@ target_sources(logxx PRIVATE
 	source/logxx.cpp
     source/logger_ostream.cpp
     $<$<PLATFORM_ID:Windows>:source/logger_outputdebugstring.cpp>
-    source/logger_splitter.cpp
     source/logger_stdio.cpp
 )
 
