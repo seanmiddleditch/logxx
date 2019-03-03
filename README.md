@@ -48,17 +48,19 @@ compile times.
 This same author created [formatxx](https://github.com/seanmiddleditch/formatxx) to optimize
 the build overhead of fmtlib, and logxx is a similar response to spdlog.
 
-Of great importance to note is that with C++20 around the corner, the
-introduction of C++ Modules may so greatly reduce the compile-time overhead
-of libraries like spdlog and fmtlib (which might itself also be part of
-C++ in an upcoming release) that this library will be obsolete. It may be
-that template instantiation overhead is still a serious problem with those
-other libraries. Time will tell.
+Of great importance to note is that with C++20 around the corner, the introduction of C++
+Modules may so greatly reduce the compile-time overhead of libraries like spdlog and fmtlib
+(which might itself also be part of C++ in an upcoming release) that this library will be
+obsolete. It may be that template instantiation overhead is still a serious problem with
+those other libraries. Time will tell.
 
 ## To Do
 
-- Optimization, esp. around locking
+- Optimization and profling
 - Multi-logger implementation
+- Structured logging?
+- Filtering
+- Error contexts
 - More built-in loggers
   - Rotating file logger
   - Network logger?
