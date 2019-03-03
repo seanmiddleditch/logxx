@@ -53,5 +53,5 @@ auto logxx::logger_outputdebugstring::handle(log_message const& message) -> log_
     buffer[sizeof(buffer) - 1] = 0;
     OutputDebugStringA(buffer);
 
-    return log_operation::proceed;
+    return log_operation::op_continue;
 }

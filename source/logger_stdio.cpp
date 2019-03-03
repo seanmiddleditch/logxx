@@ -52,5 +52,5 @@ auto logxx::logger_stdio::handle(log_message const& message) -> log_operation {
         fflush(_file);
     }
 
-    return log_operation::proceed;
+    return log_operation::op_continue;
 }

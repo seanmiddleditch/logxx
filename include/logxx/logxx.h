@@ -86,8 +86,8 @@ namespace logxx {
     };
 
     enum class log_operation {
-        proceed,
-        stop
+        op_continue = 0,
+        op_break
     };
 
     class string_view final {

@@ -41,7 +41,7 @@ namespace logxx {
 
         log_operation handle(log_message const& message) override {
             log_operation op = _first.handle(message);
-            if (op != log_operation::proceed) {
+            if (op != log_operation::op_continue) {
                 return op;
             }
             return _second.handle(message);

@@ -47,5 +47,5 @@ auto logxx::logger_ostream::handle(log_message const& message) -> log_operation 
         _stream << std::flush;
     }
 
-    return log_operation::proceed;
+    return log_operation::op_continue;
 }
