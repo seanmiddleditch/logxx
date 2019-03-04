@@ -37,6 +37,7 @@ target_sources(logxx PRIVATE
     include/logxx/logger_stdio.h
 )
 target_sources(logxx PRIVATE
+    source/log_format.cpp
 	source/logxx.cpp
     source/logger_ostream.cpp
     $<$<PLATFORM_ID:Windows>:source/logger_outputdebugstring.cpp>

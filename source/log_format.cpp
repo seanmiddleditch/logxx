@@ -28,27 +28,16 @@
 // Authors:
 //   Sean Middleditch <sean.middleditch+logxx@gmail.com>
 
-#if !defined(_guard_LOGXX_LOG_FORMAT_H)
-#define _guard_LOGXX_LOG_FORMAT_H 1
-#pragma once
+#include "logxx/log_format.h"
 
-#include "logxx.h"
-#include <formatxx/format.h>
-#include <formatxx/fixed_writer.h>
+void logxx::format_value(formatxx::format_writer& writer, string_view string, formatxx::string_view ctx) noexcept {
+    format_value(writer, formatxx::string_view{ string.data(), string.size() }, ctx);
+}
 
-namespace logxx {
-    template <typename... T>
-    void dispatch_format(log_level level, source_location location, string_view format, T const& ... args) {
-        formatxx::fixed_writer<1024> buffer;
-        formatxx::format(buffer, formatxx::string_view{ format.data(), format.size() }, args...);
-        dispatch(level, location, string_view{ buffer.c_str(), buffer.size() });
-    }
+void logxx::format_value(formatxx::format_writer& writer, log_level level, formatxx::string_view ctx) noexcept {
+    format_value(writer, log_level(level), ctx);
+}
 
-    LOGXX_PUBLIC void format_value(formatxx::format_writer& writer, string_view string, formatxx::string_view ctx) noexcept;
-    LOGXX_PUBLIC void format_value(formatxx::format_writer& writer, log_level level, formatxx::string_view ctx) noexcept;
-    LOGXX_PUBLIC void format_value(formatxx::format_writer& writer, source_location location, formatxx::string_view ctx) noexcept;
-} // namespace logxx
-
-#define LOGXX_LOG_FMT(level, format, ...) (::logxx::dispatch_format((level), LOGXX_CURRENT_SOURCE_LOCATION, (format), __VA_ARGS__))
-
-#endif // !defined(_guard_LOGXX_LOG_FORMAT_H)
+void logxx::format_value(formatxx::format_writer& writer, source_location location, formatxx::string_view ctx) noexcept {
+    format(writer, "{}({}):{} ", location.file, location.line, location.function);
+}
