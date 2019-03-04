@@ -144,9 +144,11 @@ namespace logxx {
         ~logger_base() = default;
     };
 
-    LOGXX_PUBLIC char const* LOGXX_API level_string(log_level level);
+    LOGXX_PUBLIC char const* LOGXX_API level_string(log_level level) noexcept;
 
     LOGXX_PUBLIC result_code LOGXX_API dispatch(log_level level, source_location location, string_view message);
+
+    LOGXX_PUBLIC result_code LOGXX_API set_default_logger(logger_base* new_logger, logger_base** old_logger = nullptr) noexcept;
 
     class scoped_logger {
     public:

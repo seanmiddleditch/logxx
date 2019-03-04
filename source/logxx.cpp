@@ -51,12 +51,14 @@ namespace {
     logxx::aligned_atomic_uint32_t global_lock = 0;
     logxx::writer_lock global_writer_lock(global_lock);
     logxx::reader_lock global_reader_lock(global_lock);
-    std::vector<logxx::logger_base*> global_loggers{ &default_logger };
+    std::vector<logxx::logger_base*> global_loggers;
+
+    logxx::logger_base* current_default_logger = &default_logger;
 
     thread_local std::vector<logxx::logger_base*> thread_loggers;
 }
 
-char const* LOGXX_API logxx::level_string(log_level level) {
+char const* LOGXX_API logxx::level_string(log_level level) noexcept {
     switch (level) {
     case log_level::fatal: return "FATAL";
     case log_level::error: return "ERROR";
@@ -89,8 +91,8 @@ logxx::scoped_logger_thread_local::~scoped_logger_thread_local() {
 auto LOGXX_API logxx::dispatch(log_level level, source_location location, string_view message) -> result_code {
     logxx::message msg{ level, message, location };
 
-    for (logger_base* logger : thread_loggers) {
-        operation op = logger->handle(msg);
+    for (auto index = thread_loggers.size(); index != 0; --index) {
+        operation op = thread_loggers[index - 1]->handle(msg);
         if (op == operation::op_break) {
             return result_code::success;
         }
@@ -98,12 +100,28 @@ auto LOGXX_API logxx::dispatch(log_level level, source_location location, string
 
     std::unique_lock<reader_lock> _(global_reader_lock);
 
-    for (logger_base* logger : global_loggers) {
-        operation op = logger->handle(msg);
+    for (auto index = global_loggers.size(); index != 0; --index) {
+        operation op = global_loggers[index - 1]->handle(msg);
         if (op == operation::op_break) {
             return result_code::success;
         }
     }
+
+    current_default_logger->handle(msg);
+
+    return result_code::success;
+}
+
+auto LOGXX_API logxx::set_default_logger(logger_base* new_logger, logger_base** old_logger) noexcept -> result_code {
+    if (new_logger == nullptr) {
+        new_logger = &default_logger;
+    }
+
+    if (old_logger != nullptr) {
+        *old_logger = current_default_logger;
+    }
+
+    current_default_logger = new_logger;
 
     return result_code::success;
 }
