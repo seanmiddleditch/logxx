@@ -60,6 +60,7 @@ namespace logxx {
         bool _flush = false;
     };
 
+    LOGXX_PUBLIC std::ostream& operator<<(std::ostream& os, string_view string);
     LOGXX_PUBLIC std::ostream& operator<<(std::ostream& os, log_level level);
     LOGXX_PUBLIC std::ostream& operator<<(std::ostream& os, source_location location);
 } // namespace logxx

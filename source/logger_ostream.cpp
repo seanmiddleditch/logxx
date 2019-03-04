@@ -31,9 +31,7 @@
 #include "logxx/logger_ostream.h"
 
 auto logxx::logger_ostream::handle(message const& message) -> operation {
-    _stream << message.location << " [" << message.level << "] ";
-    _stream.write(message.message.data(), message.message.size());
-    _stream << '\n';
+    _stream << message.location << " [" << message.level << "] " << message.message << '\n';
 
     if (_flush) {
         _stream << std::flush;
@@ -45,9 +43,7 @@ auto logxx::logger_ostream::handle(message const& message) -> operation {
 auto logxx::logger_ostream_synchronized::handle(message const& message) -> operation {
     std::unique_lock<std::mutex> _(_lock);
 
-    _stream << message.location << " [" << message.level << "] ";
-    _stream.write(message.message.data(), message.message.size());
-    _stream << '\n';
+    _stream << message.location << " [" << message.level << "] " << message.message << '\n';
 
     if (_flush) {
         _stream << std::flush;
@@ -56,16 +52,17 @@ auto logxx::logger_ostream_synchronized::handle(message const& message) -> opera
     return operation::op_continue;
 }
 
+std::ostream& logxx::operator<<(std::ostream& os, string_view string) {
+    return os.write(string.data(), string.size());
+}
+
 std::ostream& logxx::operator<<(std::ostream& os, log_level level) {
     return os << level_string(level);
 }
 
 std::ostream& logxx::operator<<(std::ostream& os, source_location location) {
 #if LOGXX_USE_SOURCE_LOCATION
-    os.write(location.file.data(), location.file.size());
-    os << '(' << location.line << "):";
-    os.write(location.function.data(), location.function.size());
-    return os << ' ';
+    return os << location.file << '(' << location.line << "): " << location.function << ' ';
 #else
     return os;
 #endif
