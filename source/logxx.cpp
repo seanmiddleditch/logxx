@@ -77,22 +77,22 @@ logxx::scoped_logger_thread_local::~scoped_logger_thread_local() {
     thread_loggers.pop_back();
 }
 
-auto LOGXX_API logxx::dispatch_message(log_message const& message) -> log_result_code {
+auto LOGXX_API logxx::dispatch_message(message const& message) -> result_code {
     for (logger_base* logger : thread_loggers) {
-        log_operation op = logger->handle(message);
-        if (op == log_operation::op_break) {
-            return log_result_code::success;
+        operation op = logger->handle(message);
+        if (op == operation::op_break) {
+            return result_code::success;
         }
     }
 
     std::unique_lock<reader_lock> _(global_reader_lock);
 
     for (logger_base* logger : global_loggers) {
-        log_operation op = logger->handle(message);
-        if (op == log_operation::op_break) {
-            return log_result_code::success;
+        operation op = logger->handle(message);
+        if (op == operation::op_break) {
+            return result_code::success;
         }
     }
 
-    return log_result_code::success;
+    return result_code::success;
 }

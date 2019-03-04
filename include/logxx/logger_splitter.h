@@ -39,9 +39,9 @@ namespace logxx {
     public:
         constexpr logger_splitter(logger_base& first, logger_base& second) noexcept : _first(first), _second(second) {}
 
-        log_operation handle(log_message const& message) override {
-            log_operation op = _first.handle(message);
-            if (op != log_operation::op_continue) {
+        operation handle(message const& message) override {
+            operation op = _first.handle(message);
+            if (op != operation::op_continue) {
                 return op;
             }
             return _second.handle(message);

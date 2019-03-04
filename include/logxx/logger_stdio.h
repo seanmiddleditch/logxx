@@ -40,7 +40,7 @@ namespace logxx {
     public:
         constexpr logger_stdio(FILE* file, bool flush = false) noexcept : _file(file), _flush(flush) {}
 
-        LOGXX_PUBLIC log_operation handle(log_message const& message) override;
+        LOGXX_PUBLIC operation handle(message const& message) override;
 
     private:
         FILE* _file = nullptr;

@@ -41,7 +41,7 @@ namespace logxx {
     public:
         logger_ostream(std::ostream& stream, bool flush = false) : _stream(stream), _flush(flush) {}
 
-        LOGXX_PUBLIC log_operation handle(log_message const& message) override;
+        LOGXX_PUBLIC operation handle(message const& message) override;
 
     private:
         std::mutex _lock;

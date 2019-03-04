@@ -30,7 +30,7 @@
 
 #include "logxx/logger_stdio.h"
 
-auto logxx::logger_stdio::handle(log_message const& message) -> log_operation {
+auto logxx::logger_stdio::handle(message const& message) -> operation {
     std::fprintf(_file,
 #if LOGXX_USE_SOURCE_LOCATION
         "%.*s(%i):%.*s "
@@ -52,5 +52,5 @@ auto logxx::logger_stdio::handle(log_message const& message) -> log_operation {
         fflush(_file);
     }
 
-    return log_operation::op_continue;
+    return operation::op_continue;
 }

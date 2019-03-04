@@ -38,15 +38,15 @@
 
 namespace logxx {
     template <typename... T>
-    void log_format(log_message const& message, T const& ... args) {
+    void log_format(message const& msg, T const& ... args) {
         formatxx::fixed_writer<1024> buffer;
-        formatxx::format(buffer, formatxx::string_view{ message.message.data(), message.message.size() }, args...);
-        log_message formatted_message = message;
+        formatxx::format(buffer, formatxx::string_view{ msg.message.data(), msg.message.size() }, args...);
+        message formatted_message = msg;
         formatted_message.message = string_view{ buffer.c_str(), buffer.size() };
         dispatch_message(formatted_message);
     }
 } // namespace logxx
 
-#define LOGXX_LOGF(level, format, ...) (::logxx::log_format({(level), (format), LOGXX_CURRENT_SOURCE_LOCATION}, __VA_ARGS__))
+#define LOGXX_LOG_FMT(level, format, ...) (::logxx::log_format({(level), (format), LOGXX_CURRENT_SOURCE_LOCATION}, __VA_ARGS__))
 
 #endif // !defined(_guard_LOGXX_LOG_FORMAT_H)

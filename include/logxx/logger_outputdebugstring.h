@@ -42,7 +42,7 @@
 namespace logxx {
     class logger_outputdebugstring final : public logger_base {
     public:
-        LOGXX_PUBLIC log_operation handle(log_message const& message) override;
+        LOGXX_PUBLIC operation handle(message const& message) override;
     };
 } // namespace logxx
 

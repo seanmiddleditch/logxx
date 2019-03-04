@@ -8,7 +8,7 @@ DOCTEST_TEST_CASE("log_format") {
     logxx::logger_ostream stream(str);
     logxx::scoped_logger scoped(stream);
 
-    LOGXX_LOGF(logxx::log_level::info, "number {} bool {} string {}", 1, true, "abc");
+    LOGXX_LOG_FMT(logxx::log_level::info, "number {} bool {} string {}", 1, true, "abc");
 
     DOCTEST_CHECK(str.str().find("number 1 bool true string abc") != std::string::npos);
 }

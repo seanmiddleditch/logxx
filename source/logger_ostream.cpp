@@ -30,7 +30,7 @@
 
 #include "logxx/logger_ostream.h"
 
-auto logxx::logger_ostream::handle(log_message const& message) -> log_operation {
+auto logxx::logger_ostream::handle(message const& message) -> operation {
     std::unique_lock<std::mutex> _(_lock);
 
 #if LOGXX_USE_SOURCE_LOCATION
@@ -47,5 +47,5 @@ auto logxx::logger_ostream::handle(log_message const& message) -> log_operation 
         _stream << std::flush;
     }
 
-    return log_operation::op_continue;
+    return operation::op_continue;
 }

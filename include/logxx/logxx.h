@@ -66,9 +66,9 @@
 #endif
 
 #if LOGXX_USE_SOURCE_LOCATION
-#   define LOGXX_CURRENT_SOURCE_LOCATION (::logxx::log_location{__FILE__, __FUNCTION__, __LINE__})
+#   define LOGXX_CURRENT_SOURCE_LOCATION (::logxx::location{__FILE__, __FUNCTION__, __LINE__})
 #else
-#   define LOGXX_CURRENT_SOURCE_LOCATION (::logxx::log_location{})
+#   define LOGXX_CURRENT_SOURCE_LOCATION (::logxx::location{})
 #endif
 
 namespace logxx {
@@ -83,7 +83,7 @@ namespace logxx {
         _max_
     };
 
-    enum class log_result_code {
+    enum class result_code {
         success = 0,
         no_loggers,
         invalid_argument,
@@ -91,7 +91,7 @@ namespace logxx {
         unknown
     };
 
-    enum class log_operation {
+    enum class operation {
         op_continue = 0,
         op_break
     };
@@ -121,24 +121,24 @@ namespace logxx {
     };
 
 #if LOGXX_USE_SOURCE_LOCATION
-    struct log_location final {
+    struct location final {
         string_view file;
         string_view function;
         int line = 0;
     };
 #else
-    struct log_location final {};
+    struct location final {};
 #endif
 
-    struct log_message final {
+    struct message final {
         log_level level = log_level::info;
         string_view message;
-        log_location location;
+        location location;
     };
 
     class logger_base {
     public:
-        virtual log_operation handle(log_message const& message) = 0;
+        virtual operation handle(message const& message) = 0;
 
     protected:
         ~logger_base() = default;
@@ -146,7 +146,7 @@ namespace logxx {
 
     LOGXX_PUBLIC char const* LOGXX_API level_string(log_level level);
 
-    LOGXX_PUBLIC log_result_code LOGXX_API dispatch_message(log_message const& message);
+    LOGXX_PUBLIC result_code LOGXX_API dispatch_message(message const& message);
 
     class scoped_logger {
     public:

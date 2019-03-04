@@ -39,7 +39,7 @@
 namespace logxx {
     class logger_ostream final : public logger_base {
     public:
-        void handle(log_message const&) override {}
+        void handle(message const&) override {}
     };
 } // namespace logxx
 
