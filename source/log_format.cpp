@@ -35,7 +35,7 @@ void logxx::format_value(formatxx::format_writer& writer, string_view string, fo
 }
 
 void logxx::format_value(formatxx::format_writer& writer, log_level level, formatxx::string_view ctx) noexcept {
-    format_value(writer, log_level(level), ctx);
+    format_value(writer, level_string(level), ctx);
 }
 
 void logxx::format_value(formatxx::format_writer& writer, source_location location, formatxx::string_view ctx) noexcept {
