@@ -33,7 +33,6 @@ target_sources(logxx PRIVATE
     include/logxx/logger_null.h
     include/logxx/logger_ostream.h
     include/logxx/logger_outputdebugstring.h
-    include/logxx/logger_splitter.h
     include/logxx/logger_stdio.h
 )
 target_sources(logxx PRIVATE
@@ -68,7 +67,6 @@ if(LOGXX_BUILD_TESTS)
         tests/test_log_format.cpp
         tests/test_ostream.cpp
         $<$<PLATFORM_ID:Windows>:tests/test_outputdebugstring.cpp>
-        tests/test_splitter.cpp
         tests/test_stdio.cpp
     )
 	target_link_libraries(logxx_tests logxx doctest)
