@@ -35,7 +35,7 @@
 
 auto logxx::logger_outputdebugstring::handle(message const& message) -> operation {
     formatxx::fixed_writer<1024> buffer;
-    format(buffer, "{}[{}]: {}\n", message.location, message.level, message.message);
+    format(buffer, "{}({}) {}\n", message.location, message.level, message.message);
     OutputDebugStringA(buffer.c_str());
 
     return operation::op_continue;

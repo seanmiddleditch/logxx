@@ -35,7 +35,7 @@ auto logxx::logger_stdio::handle(message const& message) -> operation {
 #if LOGXX_USE_SOURCE_LOCATION
         "%.*s(%i):%.*s "
 #endif
-        "[%s] %.*s\n",
+        "(%s) %.*s\n",
 #if LOGXX_USE_SOURCE_LOCATION
         static_cast<int>(message.location.file.size()),
         message.location.file.data(),

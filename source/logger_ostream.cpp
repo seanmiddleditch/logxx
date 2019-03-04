@@ -31,7 +31,7 @@
 #include "logxx/logger_ostream.h"
 
 auto logxx::logger_ostream::handle(message const& message) -> operation {
-    _stream << message.location << " [" << message.level << "] " << message.message << '\n';
+    _stream << message.location << " (" << message.level << ") " << message.message << '\n';
 
     if (_flush) {
         _stream << std::flush;
@@ -43,7 +43,7 @@ auto logxx::logger_ostream::handle(message const& message) -> operation {
 auto logxx::logger_ostream_synchronized::handle(message const& message) -> operation {
     std::unique_lock<std::mutex> _(_lock);
 
-    _stream << message.location << " [" << message.level << "] " << message.message << '\n';
+    _stream << message.location << " (" << message.level << ") " << message.message << '\n';
 
     if (_flush) {
         _stream << std::flush;
