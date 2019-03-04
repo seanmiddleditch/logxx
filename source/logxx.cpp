@@ -49,12 +49,12 @@ namespace {
 
 char const* LOGXX_API logxx::level_string(log_level level) {
     switch (level) {
-    case log_level::fatal: return "fatal";
-    case log_level::error: return "error";
-    case log_level::warning: return "warning";
-    case log_level::info: return "info";
-    case log_level::debug: return "debug";
-    case log_level::trace: return "trace";
+    case log_level::fatal: return "FATAL";
+    case log_level::error: return "ERROR";
+    case log_level::warning: return "WARNING";
+    case log_level::info: return "INFO";
+    case log_level::debug: return "DEBUG";
+    case log_level::trace: return "TRACE";
     default: return "$unknown$";
     }
 }
