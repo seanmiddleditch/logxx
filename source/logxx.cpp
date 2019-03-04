@@ -29,15 +29,24 @@
 //   Sean Middleditch <sean.middleditch+logxx@gmail.com>
 
 #include "logxx/logxx.h"
-#include "logxx/logger_stdio.h"
 #include "reader_writer_lock.h"
+
+#if defined(_WIN32)
+#   include "logxx/logger_outputdebugstring.h"
+#else
+#   include "logxx/logger_stdio.h"
+#endif
 
 #include <mutex>
 #include <cstdio>
 #include <vector>
 
 namespace {
-    logxx::logger_stdio default_logger(stdout);
+#if defined(_WIN32)
+    logxx::logger_outputdebugstring default_logger;
+#else
+    logxx::logger_stdio default_logger(stderr);
+#endif
 
     logxx::aligned_atomic_uint32_t global_lock = 0;
     logxx::writer_lock global_writer_lock(global_lock);
