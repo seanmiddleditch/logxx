@@ -44,10 +44,24 @@ namespace logxx {
         LOGXX_PUBLIC operation handle(message const& message) override;
 
     private:
+        std::ostream& _stream;
+        bool _flush = false;
+    };
+
+    class logger_ostream_synchronized final : public logger_base {
+    public:
+        logger_ostream_synchronized(std::ostream& stream, bool flush = false) : _stream(stream), _flush(flush) {}
+
+        LOGXX_PUBLIC operation handle(message const& message) override;
+
+    private:
         std::mutex _lock;
         std::ostream& _stream;
         bool _flush = false;
     };
+
+    LOGXX_PUBLIC std::ostream& operator<<(std::ostream& os, log_level level);
+    LOGXX_PUBLIC std::ostream& operator<<(std::ostream& os, source_location location);
 } // namespace logxx
 
 #endif // !defined(_guard_LOGXX_LOGGER_OSTREAM_H)

@@ -66,9 +66,9 @@
 #endif
 
 #if LOGXX_USE_SOURCE_LOCATION
-#   define LOGXX_CURRENT_SOURCE_LOCATION (::logxx::location{__FILE__, __FUNCTION__, __LINE__})
+#   define LOGXX_CURRENT_SOURCE_LOCATION (::logxx::source_location{__FILE__, __FUNCTION__, __LINE__})
 #else
-#   define LOGXX_CURRENT_SOURCE_LOCATION (::logxx::location{})
+#   define LOGXX_CURRENT_SOURCE_LOCATION (::logxx::source_location{})
 #endif
 
 namespace logxx {
@@ -121,19 +121,19 @@ namespace logxx {
     };
 
 #if LOGXX_USE_SOURCE_LOCATION
-    struct location final {
+    struct source_location final {
         string_view file;
         string_view function;
         int line = 0;
     };
 #else
-    struct location final {};
+    struct source_location final {};
 #endif
 
     struct message final {
         log_level level = log_level::info;
         string_view message;
-        location location;
+        source_location location;
     };
 
     class logger_base {
@@ -146,7 +146,7 @@ namespace logxx {
 
     LOGXX_PUBLIC char const* LOGXX_API level_string(log_level level);
 
-    LOGXX_PUBLIC result_code LOGXX_API dispatch_message(message const& message);
+    LOGXX_PUBLIC result_code LOGXX_API dispatch(log_level level, source_location location, string_view message);
 
     class scoped_logger {
     public:
@@ -168,7 +168,7 @@ namespace logxx {
 
 } // namespace logxx
 
-#define LOGXX_LOG(level, message) (::logxx::dispatch_message({(level), (message), LOGXX_CURRENT_SOURCE_LOCATION}))
+#define LOGXX_LOG(level, message) ::logxx::dispatch((level), LOGXX_CURRENT_SOURCE_LOCATION, (message))
 
 #define LOGXX_LOG_ERROR(message) LOGXX_LOG(::logxx::log_level::error, (message))
 #define LOGXX_LOG_INFO(message) LOGXX_LOG(::logxx::log_level::info, (message))

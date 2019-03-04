@@ -11,3 +11,13 @@ DOCTEST_TEST_CASE("logger_ostream") {
 
     DOCTEST_CHECK(str.str().find("testing ostream") != std::string::npos);
 }
+
+DOCTEST_TEST_CASE("logger_ostream_synchronized") {
+    std::ostringstream str;
+    logxx::logger_ostream_synchronized stream(str);
+    logxx::scoped_logger scoped(stream);
+
+    LOGXX_LOG_INFO("testing ostream");
+
+    DOCTEST_CHECK(str.str().find("testing ostream") != std::string::npos);
+}

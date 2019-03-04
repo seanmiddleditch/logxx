@@ -3,7 +3,7 @@
 #include <sstream>
 #include <doctest/doctest.h>
 
-DOCTEST_TEST_CASE("log_format") {
+DOCTEST_TEST_CASE("dispatch_format") {
     std::ostringstream str;
     logxx::logger_ostream stream(str);
     logxx::scoped_logger scoped(stream);

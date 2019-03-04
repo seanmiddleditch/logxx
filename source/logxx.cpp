@@ -77,9 +77,11 @@ logxx::scoped_logger_thread_local::~scoped_logger_thread_local() {
     thread_loggers.pop_back();
 }
 
-auto LOGXX_API logxx::dispatch_message(message const& message) -> result_code {
+auto LOGXX_API logxx::dispatch(log_level level, source_location location, string_view message) -> result_code {
+    logxx::message msg{ level, message, location };
+
     for (logger_base* logger : thread_loggers) {
-        operation op = logger->handle(message);
+        operation op = logger->handle(msg);
         if (op == operation::op_break) {
             return result_code::success;
         }
@@ -88,7 +90,7 @@ auto LOGXX_API logxx::dispatch_message(message const& message) -> result_code {
     std::unique_lock<reader_lock> _(global_reader_lock);
 
     for (logger_base* logger : global_loggers) {
-        operation op = logger->handle(message);
+        operation op = logger->handle(msg);
         if (op == operation::op_break) {
             return result_code::success;
         }
