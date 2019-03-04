@@ -63,9 +63,9 @@ std::ostream& logxx::operator<<(std::ostream& os, log_level level) {
 std::ostream& logxx::operator<<(std::ostream& os, source_location location) {
 #if LOGXX_USE_SOURCE_LOCATION
     os.write(location.file.data(), location.file.size());
-    os << '(' << location.line << "): [";
+    os << '(' << location.line << "):";
     os.write(location.function.data(), location.function.size());
-    return os << ']';
+    return os << ' ';
 #else
     return os;
 #endif
