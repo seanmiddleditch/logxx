@@ -47,10 +47,6 @@ namespace logxx {
     }
 } // namespace logxx
 
-#if LOGXX_SOURCE_LOCATION
-#   define LOGXX_LOGF(level, format, ...) (::logxx::log_format({(level), (format), __FILE__, __FUNCTION__, __LINE__}, __VA_ARGS__))
-#else
-#   define LOGXX_LOGF(level, format, ...) (::logxx::log_format({(level), (format)}, __VA_ARGS__))
-#endif
+#define LOGXX_LOGF(level, format, ...) (::logxx::log_format({(level), (format), LOGXX_CURRENT_SOURCE_LOCATION}, __VA_ARGS__))
 
 #endif // !defined(_guard_LOGXX_LOG_FORMAT_H)

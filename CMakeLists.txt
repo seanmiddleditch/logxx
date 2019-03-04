@@ -23,7 +23,7 @@ set_target_properties(logxx PROPERTIES
 
 if(LOGXX_RELEASE_SOURCE_LOCATION)
     target_compile_definitions(logxx PUBLIC
-        LOGXX_SOURCE_LOCATION=1
+        LOGXX_USE_SOURCE_LOCATION=1
     )
 endif()
 

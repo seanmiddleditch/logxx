@@ -32,16 +32,16 @@
 
 auto logxx::logger_stdio::handle(log_message const& message) -> log_operation {
     std::fprintf(_file,
-#if LOGXX_SOURCE_LOCATION
+#if LOGXX_USE_SOURCE_LOCATION
         "%.*s(%i):%.*s "
 #endif
         "[%s] %.*s\n",
-#if LOGXX_SOURCE_LOCATION
-        static_cast<int>(message.location_file.size()),
-        message.location_file.data(),
-        message.location_line,
-        static_cast<int>(message.location_symbol.size()),
-        message.location_symbol.data(),
+#if LOGXX_USE_SOURCE_LOCATION
+        static_cast<int>(message.location.file.size()),
+        message.location.file.data(),
+        message.location.line,
+        static_cast<int>(message.location.function.size()),
+        message.location.function.data(),
 #endif
         level_string(message.level),
         static_cast<int>(message.message.size()),
