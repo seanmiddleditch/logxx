@@ -38,7 +38,6 @@
 #endif
 
 #include <mutex>
-#include <cstdio>
 #include <vector>
 
 namespace {

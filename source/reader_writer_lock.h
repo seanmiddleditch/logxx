@@ -35,6 +35,7 @@
 #pragma once
 
 #include <cstdint>
+#include <atomic>
 
 namespace logxx {
     namespace reader_writer {

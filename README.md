@@ -57,17 +57,16 @@ those other libraries. Time will tell.
 ## To Do
 
 - Optimization and profling
-- Multi-logger implementation
 - Structured logging?
+- Log modules
+  - Module name
+  - Independent enable/disable
 - Filtering
 - Error contexts
 - More built-in loggers
   - Rotating file logger
   - Network logger?
   - *nix syslog logger
-- Formatted logging via formatxx
-  - Maybe also ostream and fmtlib (or stdlib) formatting
-- Real tests
 
 ## Copying
 
