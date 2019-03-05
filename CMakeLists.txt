@@ -67,6 +67,7 @@ if(LOGXX_BUILD_TESTS)
         tests/test_log_format.cpp
         tests/test_ostream.cpp
         $<$<PLATFORM_ID:Windows>:tests/test_outputdebugstring.cpp>
+        tests/test_section.cpp
         tests/test_set_default.cpp
         tests/test_stdio.cpp
     )

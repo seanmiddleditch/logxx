@@ -73,12 +73,12 @@
 
 namespace logxx {
     enum class log_level {
-        fatal,
-        error,
-        warning,
-        info,
-        debug,
         trace,
+        debug,
+        info,
+        warning,
+        error,
+        fatal,
 
         _max_
     };
@@ -136,6 +136,28 @@ namespace logxx {
         source_location location;
     };
 
+    class section final {
+    public:
+        explicit constexpr section(string_view name) noexcept : _name(name) {}
+        explicit constexpr section(string_view name, log_level level) noexcept : _name(name), _min(level) {}
+
+        constexpr string_view name() const noexcept { return _name; }
+        constexpr bool enabled_for(log_level level) const noexcept {
+            return level >= _min && _enabled;
+        }
+
+        constexpr log_level level() const noexcept { return _min; }
+        constexpr log_level level(log_level level) noexcept { return _min = level; }
+
+        constexpr bool enabled() const noexcept { return _enabled; }
+        constexpr bool endabled(bool enable) noexcept { return _enabled = enable; }
+
+    private:
+        string_view _name;
+        log_level _min = log_level::trace;
+        bool _enabled = true;
+    };
+
     class logger_base {
     public:
         virtual operation handle(message const& message) = 0;
@@ -150,7 +172,7 @@ namespace logxx {
 
     LOGXX_PUBLIC result_code LOGXX_API set_default_logger(logger_base* new_logger, logger_base** old_logger = nullptr) noexcept;
 
-    class scoped_logger {
+    class scoped_logger final {
     public:
         LOGXX_PUBLIC scoped_logger(logger_base& logger);
         LOGXX_PUBLIC ~scoped_logger();
@@ -159,7 +181,7 @@ namespace logxx {
         logger_base& _logger;
     };
 
-    class scoped_logger_thread_local {
+    class scoped_logger_thread_local final {
     public:
         LOGXX_PUBLIC scoped_logger_thread_local(logger_base& logger);
         LOGXX_PUBLIC ~scoped_logger_thread_local();
@@ -171,6 +193,7 @@ namespace logxx {
 } // namespace logxx
 
 #define LOGXX_LOG(level, message) ::logxx::dispatch((level), LOGXX_CURRENT_SOURCE_LOCATION, (message))
+#define LOGXX_LOG_TO(section_object, level, message) do{::logxx::log_level _log_level = (level); ::logxx::section const& _log_section = (section_object); if (_log_section.enabled_for(_log_level)) ::logxx::dispatch((level), LOGXX_CURRENT_SOURCE_LOCATION, (message)); }while(false)
 
 #define LOGXX_LOG_ERROR(message) LOGXX_LOG(::logxx::log_level::error, (message))
 #define LOGXX_LOG_INFO(message) LOGXX_LOG(::logxx::log_level::info, (message))
