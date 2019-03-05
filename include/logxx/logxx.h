@@ -111,7 +111,7 @@ namespace logxx {
         constexpr size_type size() const noexcept { return _end - _begin; }
 
         constexpr iterator begin() const noexcept { return _begin; }
-        constexpr iterator end() const noexcept { return _begin; }
+        constexpr iterator end() const noexcept { return _end; }
 
         explicit operator bool() const noexcept { return _begin != _end; }
 
